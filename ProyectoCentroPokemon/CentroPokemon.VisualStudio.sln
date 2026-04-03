@@ -1,0 +1,39 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentroPokemon.API", "CentroPokemon.API\CentroPokemon.API.csproj", "{2AE34ED9-6EF9-41C3-B69C-0BFAF51AA0C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentroPokemon.BC", "CentroPokemon.BC\CentroPokemon.BC.csproj", "{D140DAD5-B39D-45BC-A730-A111B4506545}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentroPokemon.BW", "CentroPokemon.BW\CentroPokemon.BW.csproj", "{106655AE-8FC2-462F-B557-62D7B0BB6F2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentroPokemon.DA", "CentroPokemon.DA\CentroPokemon.DA.csproj", "{282D8898-971C-4B25-A49D-4413AB2130E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AE34ED9-6EF9-41C3-B69C-0BFAF51AA0C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AE34ED9-6EF9-41C3-B69C-0BFAF51AA0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AE34ED9-6EF9-41C3-B69C-0BFAF51AA0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AE34ED9-6EF9-41C3-B69C-0BFAF51AA0C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D140DAD5-B39D-45BC-A730-A111B4506545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D140DAD5-B39D-45BC-A730-A111B4506545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D140DAD5-B39D-45BC-A730-A111B4506545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D140DAD5-B39D-45BC-A730-A111B4506545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106655AE-8FC2-462F-B557-62D7B0BB6F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106655AE-8FC2-462F-B557-62D7B0BB6F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106655AE-8FC2-462F-B557-62D7B0BB6F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106655AE-8FC2-462F-B557-62D7B0BB6F2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{282D8898-971C-4B25-A49D-4413AB2130E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{282D8898-971C-4B25-A49D-4413AB2130E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{282D8898-971C-4B25-A49D-4413AB2130E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{282D8898-971C-4B25-A49D-4413AB2130E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

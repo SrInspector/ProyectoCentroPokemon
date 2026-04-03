@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="CentroPokemon.API/CentroPokemon.API.csproj" />
-  <Project Path="CentroPokemon.BC/CentroPokemon.BC.csproj" />
-  <Project Path="CentroPokemon.BW/CentroPokemon.BW.csproj" />
-  <Project Path="CentroPokemon.DA/CentroPokemon.DA.csproj" />
-</Solution>

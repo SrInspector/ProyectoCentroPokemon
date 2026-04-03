@@ -15,8 +15,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCentroPokemonDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("La cadena de conexion DefaultConnection no esta configurada.");
+        var connectionString = ResolveConnectionString(configuration);
 
         services.AddDbContext<CentroPokemonDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -52,5 +51,29 @@ public static class DependencyInjection
         services.AddScoped<IGestionarReportesBW, GestionarReportesBW>();
 
         return services;
+    }
+
+    private static string ResolveConnectionString(IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (!string.IsNullOrWhiteSpace(connectionString))
+        {
+            return connectionString;
+        }
+
+        var server = configuration["SqlServer:Server"];
+        var database = configuration["SqlServer:Database"];
+
+        if (string.IsNullOrWhiteSpace(server) || string.IsNullOrWhiteSpace(database))
+        {
+            throw new InvalidOperationException(
+                "Debe configurar ConnectionStrings:DefaultConnection o SqlServer:Server y SqlServer:Database.");
+        }
+
+        var trustedConnection = configuration.GetValue("SqlServer:TrustedConnection", true);
+        var trustServerCertificate = configuration.GetValue("SqlServer:TrustServerCertificate", true);
+        var multipleActiveResultSets = configuration.GetValue("SqlServer:MultipleActiveResultSets", true);
+
+        return $"Server={server};Database={database};Trusted_Connection={trustedConnection};TrustServerCertificate={trustServerCertificate};MultipleActiveResultSets={multipleActiveResultSets}";
     }
 }
