@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Mis Pokémon</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/comprobantes">
+        <ion-icon name="document-text-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/tratamientos">
+        <ion-icon name="medkit-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/citas">
+        <ion-icon name="calendar-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/estado-clinico">
+        <ion-icon name="pulse-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="trainer-header">
+    <h2>¡Hola, {{ trainer?.name }}!</h2>
+    <p>Aquí están tus Pokémon</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent" color="danger"></ion-spinner>
+    <p>Cargando Pokémon...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <ion-card *ngFor="let pokemon of pokemons" (click)="goToDetail(pokemon)">
+      <div class="pokemon-card-content">
+        <img [src]="pokemon.image" [alt]="pokemon.name" class="pokemon-image">
+        <ion-card-header>
+          <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
+          <ion-card-subtitle>Nivel {{ pokemon.level }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="types-container">
+            <ion-badge *ngFor="let type of pokemon.types" color="primary">
+              {{ type }}
+            </ion-badge>
+          </div>
+          <ion-badge [color]="pokemon.clinicalStatus === 'Estable' ? 'success' : 'warning'">
+            {{ pokemon.clinicalStatus }}
+          </ion-badge>
+        </ion-card-content>
+      </div>
+    </ion-card>
+  </div>
+
+</ion-content>
