@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {
-  IonContent, IonItem, IonLabel, IonInput,
-  IonButton, IonSpinner, IonIcon
-} from '@ionic/angular/standalone';
+import { IonContent, IonInput, IonButton, IonSpinner, IonIcon } from '@ionic/angular/standalone';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -13,43 +10,28 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonContent,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonButton,
-    IonSpinner,
-    IonIcon
-  ]
+  imports: [CommonModule, FormsModule, IonContent, IonInput, IonButton, IonSpinner, IonIcon]
 })
 export class LoginPage {
+  correo = '';
+  password = '';
+  isLoading = false;
+  errorMessage = '';
 
-  email: string = '';
-  password: string = '';
-  isLoading: boolean = false;
-  errorMessage: string = '';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   login() {
     this.errorMessage = '';
     this.isLoading = true;
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        this.authService.saveSession(response.token, response.user);
+    this.authService.login(this.correo, this.password).subscribe({
+      next: () => {
         this.isLoading = false;
         this.router.navigate(['/pokemon-list']);
       },
-      error: (err) => {
+      error: (error) => {
         this.isLoading = false;
-        this.errorMessage = err.message || 'Error al iniciar sesión';
+        this.errorMessage = error?.error?.mensaje || error?.message || 'Error al iniciar sesion';
       }
     });
   }

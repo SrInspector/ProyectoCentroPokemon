@@ -1,32 +1,19 @@
-<ion-content class="login-content">
+﻿<ion-content class="login-content">
   <div class="login-container">
-
-    <div class="pokeball-container">
-      <div class="pokeball">
-        <div class="pokeball-top"></div>
-        <div class="pokeball-middle"></div>
-        <div class="pokeball-bottom"></div>
-        <div class="pokeball-button"></div>
-      </div>
-    </div>
-
     <div class="login-header">
-      <h1>Centro Pokémon</h1>
-      <p>Inicia sesión para continuar</p>
+      <h1>Centro Pokemon</h1>
+      <p>Ingresa con un usuario real del backend.</p>
     </div>
 
     <div class="login-form">
-
       <div class="input-wrapper">
         <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-        <ion-input type="email" [(ngModel)]="email" placeholder="Correo electrónico" class="custom-input">
-        </ion-input>
+        <ion-input type="email" [(ngModel)]="correo" placeholder="Correo" class="custom-input"></ion-input>
       </div>
 
       <div class="input-wrapper">
         <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-        <ion-input type="password" [(ngModel)]="password" placeholder="Contraseña" class="custom-input">
-        </ion-input>
+        <ion-input type="password" [(ngModel)]="password" placeholder="Contrasena" class="custom-input"></ion-input>
       </div>
 
       <div class="error-message" *ngIf="errorMessage">
@@ -36,17 +23,8 @@
 
       <ion-button expand="block" class="login-button" (click)="login()" [disabled]="isLoading">
         <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-        <span *ngIf="!isLoading">
-          <ion-icon name="enter-outline" slot="start"></ion-icon>
-          Iniciar Sesión
-        </span>
+        <span *ngIf="!isLoading">Iniciar sesion</span>
       </ion-button>
-
-      <div class="hint-text">
-        <ion-icon name="information-circle-outline"></ion-icon>
-        <span>trainer@pokemon.com / Trainer123!</span>
-      </div>
-
     </div>
   </div>
 </ion-content>

@@ -1,86 +1,27 @@
-<ion-header>
+﻿<ion-header>
   <ion-toolbar color="danger">
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-buttons slot="start"><ion-button (click)="goBack()"><ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon></ion-button></ion-buttons>
     <ion-title>Comprobantes</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
-  <div *ngIf="isLoading" class="loading-container">
-    <ion-spinner name="crescent" color="danger"></ion-spinner>
-    <p>Cargando comprobantes...</p>
-  </div>
-
+  <div *ngIf="isLoading" class="loading-container"><ion-spinner name="crescent" color="danger"></ion-spinner><p>Cargando comprobantes...</p></div>
   <div *ngIf="!isLoading">
-
-    <div *ngIf="comprobantes.length === 0" class="empty-container">
-      <ion-icon name="document-outline"></ion-icon>
-      <p>No hay comprobantes disponibles</p>
-    </div>
-
+    <div *ngIf="comprobantes.length === 0" class="empty-container"><p>No hay comprobantes disponibles</p></div>
     <ion-card *ngFor="let comprobante of comprobantes">
-
-      <div class="card-header-custom">
-        <img [src]="comprobante.pokemonImage" [alt]="comprobante.pokemonName" class="pokemon-mini">
-        <div class="pokemon-info">
-          <h2>{{ comprobante.pokemonName | titlecase }}</h2>
-          <p class="ref-text">{{ comprobante.id }}</p>
-          <ion-badge [color]="getEstadoColor(comprobante.estado)">
-            {{ comprobante.estado }}
-          </ion-badge>
-        </div>
-      </div>
-
       <ion-card-content>
         <ion-list lines="none">
-
-          <ion-item>
-            <ion-icon name="medical-outline" slot="start" color="danger"></ion-icon>
-            <ion-label>
-              <p>Tipo de servicio</p>
-              <h3>{{ comprobante.tipo }}</h3>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
-            <ion-label>
-              <p>Fecha</p>
-              <h3>{{ comprobante.fecha }}</h3>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="chatbubble-outline" slot="start" color="warning"></ion-icon>
-            <ion-label class="ion-text-wrap">
-              <p>Descripción</p>
-              <h3>{{ comprobante.descripcion }}</h3>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
-            <ion-label>
-              <p>Monto</p>
-              <h3 class="monto-text">CRC {{ comprobante.monto.toLocaleString() }}</h3>
-            </ion-label>
-          </ion-item>
-
+          <ion-item><ion-label><p>Referencia</p><h3>{{ comprobante.referencia }}</h3></ion-label></ion-item>
+          <ion-item><ion-label><p>Entrenador</p><h3>{{ comprobante.entrenador?.nombre || 'Sin dato' }}</h3></ion-label></ion-item>
+          <ion-item><ion-label><p>Fecha</p><h3>{{ comprobante.fechaEmisionUtc | date:'short' }}</h3></ion-label></ion-item>
+          <ion-item><ion-label><p>Total</p><h3>{{ comprobante.total | currency:'CRC':'symbol':'1.0-0' }}</h3></ion-label></ion-item>
+          <ion-item><ion-label><p>Estado</p><ion-badge [color]="getEstadoColor(comprobante.estado)">{{ comprobante.estado }}</ion-badge></ion-label></ion-item>
         </ion-list>
-
         <ion-button expand="block" color="danger" class="download-button" (click)="descargarPDF(comprobante)">
           <ion-icon name="download-outline" slot="start"></ion-icon>
           Descargar PDF
         </ion-button>
-
       </ion-card-content>
     </ion-card>
-
   </div>
-
 </ion-content>

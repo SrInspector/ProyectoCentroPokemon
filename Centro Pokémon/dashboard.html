@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Centro Pokemon</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+<script>
+if (!localStorage.getItem("token")) {
+    window.location.href = "index.html";
+}
+</script>
+<header class="navbar">
+    <div class="nav-container">
+        <div class="logo"><span>Centro Pokemon</span></div>
+        <nav class="menu">
+            <a data-module="usuarios" onclick="loadModule('usuarios')">Usuarios</a>
+            <a data-module="entrenadores" onclick="loadModule('entrenadores')">Entrenadores</a>
+            <a data-module="pokemon" onclick="loadModule('pokemon')">Pokemon</a>
+            <a data-module="citas" onclick="loadModule('citas')">Citas</a>
+            <a data-module="internamientos" onclick="loadModule('internamientos')">Internamientos</a>
+            <a data-module="tratamientos" onclick="loadModule('tratamientos')">Tratamientos</a>
+            <a data-module="facturacion" onclick="loadModule('facturacion')">Facturacion</a>
+            <a data-module="historial" onclick="loadModule('historial')">Historial</a>
+            <a data-module="reportes" onclick="loadModule('reportes')">Reportes</a>
+        </nav>
+        <div class="nav-right">
+            <span id="userLabel"></span>
+            <span id="roleLabel"></span>
+            <button onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+<main class="main-container">
+    <div id="contenido"></div>
+</main>
+<script src="Core/api.js"></script>
+<script src="Core/auth.js"></script>
+<script src="Core/roles.js"></script>
+<script>
+let currentModule = null;
+
+async function loadModule(moduleName) {
+    if (!canAccess(moduleName)) {
+        alert("No tienes acceso a este modulo.");
+        return;
+    }
+
+    currentModule = moduleName;
+    const content = document.getElementById("contenido");
+    content.innerHTML = `<p>Cargando ${moduleName}...</p>`;
+
+    window.moduleInit = null;
+    document.querySelectorAll(".module-script").forEach((script) => script.remove());
+
+    const script = document.createElement("script");
+    script.src = `Modulos/${moduleName}.js?v=${Date.now()}`;
+    script.className = "module-script";
+    script.onload = () => {
+        if (typeof window.moduleInit === "function") {
+            window.moduleInit();
+        }
+    };
+
+    script.onerror = () => {
+        content.innerHTML = `<p>No se pudo abrir el modulo ${moduleName}.</p>`;
+    };
+
+    document.body.appendChild(script);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    requireAuth();
+    applyRoleVisibility();
+
+    const role = getRole();
+    const defaultModule = (roleModules[role] || [])[0] || "pokemon";
+    loadModule(defaultModule);
+});
+</script>
+</body>
+</html>

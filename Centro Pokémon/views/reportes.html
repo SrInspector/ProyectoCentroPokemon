@@ -1,0 +1,15 @@
+<h2>Reportes</h2>
+<button onclick="load()">Cargar</button>
+<ul id="list"></ul>
+
+<script>
+async function load(){
+    let data = await api("reportes");
+    list.innerHTML="";
+    data.forEach(x=>{
+        let li=document.createElement("li");
+        li.textContent=JSON.stringify(x);
+        list.appendChild(li);
+    });
+}
+</script>

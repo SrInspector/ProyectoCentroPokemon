@@ -1,95 +1,20 @@
-<ion-header>
+﻿<ion-header>
   <ion-toolbar color="danger">
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>{{ pokemonName | titlecase }}</ion-title>
+    <ion-buttons slot="start"><ion-button (click)="goBack()"><ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon></ion-button></ion-buttons>
+    <ion-title>Detalle del Pokemon</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-
-  <div *ngIf="isLoading" class="loading-container">
-    <ion-spinner name="crescent" color="danger"></ion-spinner>
-    <p>Cargando información...</p>
-  </div>
-
-  <div *ngIf="!isLoading && pokemon">
-
-    <div class="pokemon-header">
-      <img [src]="pokemon.image" [alt]="pokemon.name" class="pokemon-image">
-      <h1>{{ pokemon.name | titlecase }}</h1>
-      <div class="types-container">
-        <ion-badge *ngFor="let type of pokemon.types" color="primary">
-          {{ type }}
-        </ion-badge>
-      </div>
-    </div>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Estado Clínico</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item lines="none">
-          <ion-label>Estado</ion-label>
-          <ion-badge slot="end" color="success">{{ clinicalData.clinicalStatus }}</ion-badge>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Nivel</ion-label>
-          <ion-badge slot="end" color="primary">{{ clinicalData.level }}</ion-badge>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Entrenador</ion-label>
-          <ion-badge slot="end" color="medium">{{ clinicalData.trainer }}</ion-badge>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Última visita</ion-label>
-          <ion-badge slot="end" color="tertiary">{{ clinicalData.lastVisit }}</ion-badge>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Tratamientos activos</ion-label>
-          <ion-badge slot="end" [color]="clinicalData.activeTreatments > 0 ? 'warning' : 'success'">
-            {{ clinicalData.activeTreatments }}
-          </ion-badge>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Estadísticas</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div *ngFor="let stat of pokemon.stats" class="stat-item">
-          <div class="stat-header">
-            <span>{{ stat.name | titlecase }}</span>
-            <span>{{ stat.value }}</span>
-          </div>
-          <ion-progress-bar [value]="stat.value / 255" color="danger">
-          </ion-progress-bar>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Información Física</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item lines="none">
-          <ion-label>Altura</ion-label>
-          <ion-badge slot="end" color="medium">{{ pokemon.height }} m</ion-badge>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Peso</ion-label>
-          <ion-badge slot="end" color="medium">{{ pokemon.weight }} kg</ion-badge>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
-
-  </div>
-
+  <div *ngIf="isLoading" class="loading-container"><ion-spinner name="crescent" color="danger"></ion-spinner><p>Cargando detalle...</p></div>
+  <ion-card *ngIf="!isLoading && pokemon">
+    <ion-card-content>
+      <ion-item><ion-label><p>Nombre</p><h3>{{ pokemon.nombre }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Especie</p><h3>{{ pokemon.especie }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Identificador</p><h3>{{ pokemon.identificadorUnico }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Nivel</p><h3>{{ pokemon.nivel }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Tipo</p><h3>{{ pokemon.tipoPrimario }} {{ pokemon.tipoSecundario ? '/ ' + pokemon.tipoSecundario : '' }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Entrenador</p><h3>{{ pokemon.entrenador?.nombre || 'Sin dato' }}</h3></ion-label></ion-item>
+      <ion-item><ion-label><p>Estado</p><ion-badge [color]="pokemon.estadoSalud === 'Estable' ? 'success' : 'warning'">{{ pokemon.estadoSalud }}</ion-badge></ion-label></ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

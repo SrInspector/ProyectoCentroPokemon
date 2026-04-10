@@ -1,0 +1,15 @@
+<h2>Pokémon</h2>
+<ul id="list"></ul>
+
+<script>
+async function load(){
+    let data = await api("pokemon");
+    list.innerHTML="";
+    data.forEach(x=>{
+        let li=document.createElement("li");
+        li.textContent=x.nombre;
+        list.appendChild(li);
+    });
+}
+load();
+</script>

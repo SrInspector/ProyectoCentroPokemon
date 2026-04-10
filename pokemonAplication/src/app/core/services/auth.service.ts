@@ -1,36 +1,25 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly apiUrl = `${environment.apiUrl}/Auth`;
+  private readonly tokenKey = 'auth_token';
+  private readonly userKey = 'auth_user';
 
-  private apiUrl = 'http://localhost:5000/api';
-  private tokenKey = 'auth_token';
-  private userKey = 'auth_user';
+  private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  login(email: string, password: string): Observable<any> {
-    return new Observable(observer => {
-      setTimeout(() => {
-        if (email === 'trainer@pokemon.com' && password === 'Trainer123!') {
-          const fakeResponse = {
-            token: 'fake-jwt-token-123',
-            user: { id: 1, name: 'Ash Ketchum', email: email, role: 'Entrenador' }
-          };
-          observer.next(fakeResponse);
-          observer.complete();
-        } else {
-          observer.error({ message: 'Credenciales incorrectas' });
-        }
-      }, 1000);
-    });
+  login(correo: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, { correo, password }).pipe(
+      tap((response) => this.saveSession(response.token, response))
+    );
   }
 
   saveSession(token: string, user: any): void {
@@ -50,8 +39,16 @@ export class AuthService {
   }
 
   getUser(): any {
-    const user = localStorage.getItem(this.userKey);
-    return user ? JSON.parse(user) : null;
+    const raw = localStorage.getItem(this.userKey);
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  getRole(): string {
+    return this.getUser()?.rol || '';
+  }
+
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.getRole());
   }
 
   private hasToken(): boolean {
