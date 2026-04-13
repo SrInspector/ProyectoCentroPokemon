@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -37,5 +37,17 @@ export class ClinicalApiService {
 
   getHistorial(pokemonId: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/Historial/pokemon/${pokemonId}`);
+  }
+
+  getEntrenadores(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/Entrenadores`);
+  }
+
+  createCita(cita: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/Citas`, cita);
+  }
+
+  createTratamiento(tratamiento: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/Tratamientos`, tratamiento);
   }
 }

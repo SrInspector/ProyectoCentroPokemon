@@ -21,7 +21,7 @@ public class GestionarPokemonBW : IGestionarPokemonBW
         _pokeApiDA = pokeApiDA;
     }
 
-    public Task<List<Pokemon>> ListarAsync() => _pokemonDA.ListarAsync();
+    public Task<List<Pokemon>> ListarAsync(int? entrenadorId = null) => _pokemonDA.ListarAsync(entrenadorId);
 
     public Task<Pokemon?> ObtenerPorIdAsync(int id) => _pokemonDA.ObtenerPorIdAsync(id);
 

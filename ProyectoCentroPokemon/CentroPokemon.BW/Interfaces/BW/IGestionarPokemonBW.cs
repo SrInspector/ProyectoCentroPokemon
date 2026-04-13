@@ -6,7 +6,7 @@ namespace CentroPokemon.BW.Interfaces.BW;
 
 public interface IGestionarPokemonBW
 {
-    Task<List<Pokemon>> ListarAsync();
+    Task<List<Pokemon>> ListarAsync(int? entrenadorId = null);
     Task<Pokemon?> ObtenerPorIdAsync(int id);
     Task<PokeApiPokemonDto?> BuscarEnPokeApiAsync(string nombreOId);
     Task<Pokemon> ImportarDesdePokeApiAsync(PokemonImportRequest request);

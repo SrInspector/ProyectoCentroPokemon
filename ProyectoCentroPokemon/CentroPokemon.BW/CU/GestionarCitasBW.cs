@@ -22,7 +22,7 @@ public class GestionarCitasBW : IGestionarCitasBW
         _auditoriaBW = auditoriaBW;
     }
 
-    public Task<List<Cita>> ListarAsync() => _citaDA.ListarAsync();
+    public Task<List<Cita>> ListarAsync(int? entrenadorId = null) => _citaDA.ListarAsync(entrenadorId);
 
     public Task<Cita?> ObtenerPorIdAsync(int id) => _citaDA.ObtenerPorIdAsync(id);
 

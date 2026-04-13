@@ -15,12 +15,13 @@ public class InternamientoDA : IInternamientoDA
         _context = context;
     }
 
-    public Task<List<Internamiento>> ListarAsync()
+    public Task<List<Internamiento>> ListarAsync(int? entrenadorId = null)
         => _context.Internamientos
             .Include(x => x.Pokemon)
             .ThenInclude(x => x!.Entrenador)
             .ThenInclude(x => x!.Usuarios)
             .Include(x => x.UsuarioResponsable)
+            .Where(x => !entrenadorId.HasValue || x.Pokemon!.EntrenadorId == entrenadorId.Value)
             .OrderByDescending(x => x.FechaIngresoUtc)
             .ToListAsync();
 
@@ -35,7 +36,7 @@ public class InternamientoDA : IInternamientoDA
     public Task<Internamiento?> ObtenerActivoPorPokemonAsync(int pokemonId)
         => _context.Internamientos.FirstOrDefaultAsync(x => x.PokemonId == pokemonId && (x.Estado == EstadoInternamiento.Activo || x.Estado == EstadoInternamiento.EnObservacion));
 
-    public Task<List<Internamiento>> FiltrarAsync(string? area, EstadoInternamiento? estado, DateTime? fechaInicioUtc, DateTime? fechaFinUtc)
+    public Task<List<Internamiento>> FiltrarAsync(int? entrenadorId, string? area, EstadoInternamiento? estado, DateTime? fechaInicioUtc, DateTime? fechaFinUtc)
     {
         var query = _context.Internamientos
             .Include(x => x.Pokemon)
@@ -43,6 +44,11 @@ public class InternamientoDA : IInternamientoDA
             .ThenInclude(x => x!.Usuarios)
             .Include(x => x.UsuarioResponsable)
             .AsQueryable();
+
+        if (entrenadorId.HasValue)
+        {
+            query = query.Where(x => x.Pokemon!.EntrenadorId == entrenadorId.Value);
+        }
 
         if (!string.IsNullOrWhiteSpace(area))
         {

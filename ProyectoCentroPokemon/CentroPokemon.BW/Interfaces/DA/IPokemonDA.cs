@@ -4,7 +4,7 @@ namespace CentroPokemon.BW.Interfaces.DA;
 
 public interface IPokemonDA
 {
-    Task<List<Pokemon>> ListarAsync();
+    Task<List<Pokemon>> ListarAsync(int? entrenadorId = null);
     Task<Pokemon?> ObtenerPorIdAsync(int id);
     Task<Pokemon?> ObtenerPorIdentificadorUnicoAsync(string identificadorUnico);
     Task CrearAsync(Pokemon pokemon);

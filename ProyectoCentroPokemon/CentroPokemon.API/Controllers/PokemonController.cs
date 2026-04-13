@@ -3,6 +3,7 @@ using CentroPokemon.BC.DTOs.PokeApi;
 using CentroPokemon.BW.Interfaces.BW;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CentroPokemon.API.Controllers;
 
@@ -19,13 +20,39 @@ public class PokemonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get() => Ok(await _bw.ListarAsync());
+    public async Task<IActionResult> Get()
+    {
+        int? entrenadorIdFiltrado = null;
+        if (User.IsInRole("Entrenador"))
+        {
+            var claim = User.FindFirst("entrenadorId");
+            if (claim != null && int.TryParse(claim.Value, out var id))
+            {
+                entrenadorIdFiltrado = id;
+            }
+        }
+        return Ok(await _bw.ListarAsync(entrenadorIdFiltrado));
+    }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
         var pokemon = await _bw.ObtenerPorIdAsync(id);
-        return pokemon is null ? NotFound() : Ok(pokemon);
+        if (pokemon is null) return NotFound();
+
+        if (User.IsInRole("Entrenador"))
+        {
+            var claim = User.FindFirst("entrenadorId");
+            if (claim != null && int.TryParse(claim.Value, out var trainerId))
+            {
+                if (pokemon.EntrenadorId != trainerId)
+                {
+                    return Forbid();
+                }
+            }
+        }
+
+        return Ok(pokemon);
     }
 
     [HttpGet("pokeapi/{nombreOId}")]

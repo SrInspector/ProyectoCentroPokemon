@@ -14,12 +14,13 @@ public class FacturaDA : IFacturaDA
         _context = context;
     }
 
-    public Task<List<FacturaClinica>> ListarAsync()
+    public Task<List<FacturaClinica>> ListarAsync(int? entrenadorId = null)
         => _context.FacturasClinicas
             .Include(x => x.Entrenador)
             .Include(x => x.UsuarioGenerador)
             .Include(x => x.Detalles)
             .ThenInclude(x => x.ServicioClinico)
+            .Where(x => !entrenadorId.HasValue || x.EntrenadorId == entrenadorId.Value)
             .OrderByDescending(x => x.FechaEmisionUtc)
             .ToListAsync();
 
@@ -31,15 +32,7 @@ public class FacturaDA : IFacturaDA
             .ThenInclude(x => x.ServicioClinico)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-    public Task<List<FacturaClinica>> ObtenerPorEntrenadorAsync(int entrenadorId)
-        => _context.FacturasClinicas
-            .Include(x => x.Entrenador)
-            .Include(x => x.UsuarioGenerador)
-            .Include(x => x.Detalles)
-            .ThenInclude(x => x.ServicioClinico)
-            .Where(x => x.EntrenadorId == entrenadorId)
-            .OrderByDescending(x => x.FechaEmisionUtc)
-            .ToListAsync();
+
 
     public async Task CrearAsync(FacturaClinica factura)
     {

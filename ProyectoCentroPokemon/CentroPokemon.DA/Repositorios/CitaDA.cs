@@ -14,13 +14,14 @@ public class CitaDA : ICitaDA
         _context = context;
     }
 
-    public Task<List<Cita>> ListarAsync()
+    public Task<List<Cita>> ListarAsync(int? entrenadorId = null)
         => _context.Citas
             .Include(x => x.Entrenador)
             .ThenInclude(x => x!.Usuarios)
             .Include(x => x.Pokemon)
             .Include(x => x.UsuarioAsignado)
             .Include(x => x.Atencion)
+            .Where(x => !entrenadorId.HasValue || x.EntrenadorId == entrenadorId.Value)
             .OrderBy(x => x.FechaProgramadaUtc)
             .ToListAsync();
 

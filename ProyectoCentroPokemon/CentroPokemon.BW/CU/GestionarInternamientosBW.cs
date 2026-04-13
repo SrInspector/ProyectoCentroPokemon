@@ -11,38 +11,40 @@ public class GestionarInternamientosBW : IGestionarInternamientosBW
     private readonly IInternamientoDA _internamientoDA;
     private readonly IPokemonDA _pokemonDA;
     private readonly ITratamientoDA _tratamientoDA;
+    private readonly IUsuarioDA _usuarioDA;
     private readonly IAuditoriaBW _auditoriaBW;
 
-    public GestionarInternamientosBW(IInternamientoDA internamientoDA, IPokemonDA pokemonDA, ITratamientoDA tratamientoDA, IAuditoriaBW auditoriaBW)
+    public GestionarInternamientosBW(IInternamientoDA internamientoDA, IPokemonDA pokemonDA, ITratamientoDA tratamientoDA, IUsuarioDA usuarioDA, IAuditoriaBW auditoriaBW)
     {
         _internamientoDA = internamientoDA;
         _pokemonDA = pokemonDA;
         _tratamientoDA = tratamientoDA;
+        _usuarioDA = usuarioDA;
         _auditoriaBW = auditoriaBW;
     }
 
     public async Task<List<Internamiento>> ListarAsync(int usuarioId, string rol, string? area, EstadoInternamiento? estado, DateTime? fechaInicioUtc, DateTime? fechaFinUtc)
     {
-        var items = await _internamientoDA.FiltrarAsync(area, estado, fechaInicioUtc, fechaFinUtc);
+        int? entrenadorId = null;
         if (rol == RolSistema.Entrenador.ToString())
         {
-            return items.Where(x => x.Pokemon?.Entrenador?.Usuarios.Any(u => u.Id == usuarioId) == true).ToList();
+            var usuario = await _usuarioDA.ObtenerPorIdAsync(usuarioId);
+            if (usuario == null || !usuario.EntrenadorId.HasValue) return new List<Internamiento>();
+            entrenadorId = usuario.EntrenadorId.Value;
         }
 
-        return items;
+        return await _internamientoDA.FiltrarAsync(entrenadorId, area, estado, fechaInicioUtc, fechaFinUtc);
     }
 
     public async Task<Internamiento?> ObtenerPorIdAsync(int usuarioId, string rol, int id)
     {
         var internamiento = await _internamientoDA.ObtenerPorIdAsync(id);
-        if (internamiento is null)
-        {
-            return null;
-        }
+        if (internamiento is null) return null;
 
-        if (rol == RolSistema.Entrenador.ToString() && internamiento.Pokemon?.Entrenador?.Usuarios.Any(u => u.Id == usuarioId) != true)
+        if (rol == RolSistema.Entrenador.ToString())
         {
-            return null;
+            var usuario = await _usuarioDA.ObtenerPorIdAsync(usuarioId);
+            if (usuario?.EntrenadorId != internamiento.Pokemon?.EntrenadorId) return null;
         }
 
         return internamiento;

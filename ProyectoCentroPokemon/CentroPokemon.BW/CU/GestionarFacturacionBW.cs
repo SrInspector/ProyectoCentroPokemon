@@ -55,6 +55,7 @@ public class GestionarFacturacionBW : IGestionarFacturacionBW
 
     public async Task<List<FacturaClinica>> ListarFacturasAsync(int usuarioId, string rol)
     {
+        int? entrenadorId = null;
         if (rol == RolSistema.Entrenador.ToString())
         {
             var usuario = await _usuarioDA.ObtenerPorIdAsync(usuarioId)
@@ -64,11 +65,10 @@ public class GestionarFacturacionBW : IGestionarFacturacionBW
             {
                 return new List<FacturaClinica>();
             }
-
-            return await _facturaDA.ObtenerPorEntrenadorAsync(usuario.EntrenadorId.Value);
+            entrenadorId = usuario.EntrenadorId.Value;
         }
 
-        return await _facturaDA.ListarAsync();
+        return await _facturaDA.ListarAsync(entrenadorId);
     }
 
     public async Task<FacturaClinica?> ObtenerFacturaAsync(int usuarioId, string rol, int id)

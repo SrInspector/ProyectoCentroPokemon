@@ -35,8 +35,8 @@ public class GestionarHistorialBW : IGestionarHistorialBW
         }
 
         var tratamientos = await _tratamientoDA.ObtenerPorPokemonAsync(pokemonId);
-        var internamientos = await _internamientoDA.ListarAsync();
-        var citas = await _citaDA.ListarAsync();
+        var internamientos = await _internamientoDA.ListarAsync(pokemon.EntrenadorId);
+        var citas = await _citaDA.ListarAsync(pokemon.EntrenadorId);
 
         tratamientos = tratamientos
             .Where(x => (string.IsNullOrWhiteSpace(tipo) || x.Tipo.Contains(tipo, StringComparison.OrdinalIgnoreCase)) &&

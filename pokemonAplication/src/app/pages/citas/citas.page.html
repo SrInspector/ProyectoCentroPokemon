@@ -1,4 +1,4 @@
-﻿<ion-header>
+<ion-header>
   <ion-toolbar color="danger">
     <ion-buttons slot="start"><ion-button (click)="goBack()"><ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon></ion-button></ion-buttons>
     <ion-title>Citas</ion-title>
@@ -20,4 +20,53 @@
       </ion-card-content>
     </ion-card>
   </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngIf="canCreate()">
+    <ion-fab-button color="danger" (click)="setOpen(true)">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="danger">
+          <ion-title>Nueva Cita</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item>
+            <ion-select label="Pokémon" label-placement="floating" [(ngModel)]="nuevaCita.pokemonId">
+              <ion-select-option *ngFor="let p of pokemons" [value]="p.id">{{ p.nombre }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-select label="Entrenador" label-placement="floating" [(ngModel)]="nuevaCita.entrenadorId">
+              <ion-select-option *ngFor="let e of entrenadores" [value]="e.id">{{ e.nombre }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-textarea label="Motivo" label-placement="floating" [(ngModel)]="nuevaCita.motivo" rows="3"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label>Fecha Programada</ion-label>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime" [(ngModel)]="nuevaCita.fechaProgramadaUtc"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+        </ion-list>
+        <ion-button expand="block" class="ion-margin-top" color="danger" (click)="crearCita()" [disabled]="isCreating || !nuevaCita.motivo || !nuevaCita.pokemonId || !nuevaCita.entrenadorId">
+          <ion-spinner *ngIf="isCreating"></ion-spinner>
+          <span *ngIf="!isCreating">Guardar Cita</span>
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

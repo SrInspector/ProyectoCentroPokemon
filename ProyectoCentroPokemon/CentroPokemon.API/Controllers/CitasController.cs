@@ -2,6 +2,7 @@ using CentroPokemon.BC.DTOs.Citas;
 using CentroPokemon.BW.Interfaces.BW;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CentroPokemon.API.Controllers;
 
@@ -18,13 +19,36 @@ public class CitasController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get() => Ok(await _bw.ListarAsync());
+    public async Task<IActionResult> Get()
+    {
+        int? entrenadorIdFiltrado = null;
+        if (User.IsInRole("Entrenador"))
+        {
+            var claim = User.FindFirst("entrenadorId");
+            if (claim != null && int.TryParse(claim.Value, out var id))
+            {
+                entrenadorIdFiltrado = id;
+            }
+        }
+        return Ok(await _bw.ListarAsync(entrenadorIdFiltrado));
+    }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
         var cita = await _bw.ObtenerPorIdAsync(id);
-        return cita is null ? NotFound() : Ok(cita);
+        if (cita is null) return NotFound();
+
+        if (User.IsInRole("Entrenador"))
+        {
+            var claim = User.FindFirst("entrenadorId");
+            if (claim != null && int.TryParse(claim.Value, out var trainerId))
+            {
+                if (cita.EntrenadorId != trainerId) return Forbid();
+            }
+        }
+
+        return Ok(cita);
     }
 
     [HttpPost]
@@ -46,6 +70,18 @@ public class CitasController : ControllerBase
     {
         try
         {
+            if (User.IsInRole("Entrenador"))
+            {
+                var claim = User.FindFirst("entrenadorId");
+                if (claim != null && int.TryParse(claim.Value, out var trainerId))
+                {
+                    if (request.EntrenadorId != trainerId) return BadRequest(new { mensaje = "No puede asignar citas a otros entrenadores." });
+                    
+                    var citaExistente = await _bw.ObtenerPorIdAsync(id);
+                    if (citaExistente != null && citaExistente.EntrenadorId != trainerId) return Forbid();
+                }
+            }
+
             var actualizada = await _bw.ActualizarAsync(id, request);
             return actualizada is null ? NotFound() : Ok(actualizada);
         }

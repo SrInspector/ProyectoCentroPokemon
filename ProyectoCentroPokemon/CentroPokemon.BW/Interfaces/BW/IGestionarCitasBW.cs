@@ -5,7 +5,7 @@ namespace CentroPokemon.BW.Interfaces.BW;
 
 public interface IGestionarCitasBW
 {
-    Task<List<Cita>> ListarAsync();
+    Task<List<Cita>> ListarAsync(int? entrenadorId = null);
     Task<Cita?> ObtenerPorIdAsync(int id);
     Task<Cita> CrearAsync(CitaRequest request);
     Task<Cita?> ActualizarAsync(int id, CitaRequest request);

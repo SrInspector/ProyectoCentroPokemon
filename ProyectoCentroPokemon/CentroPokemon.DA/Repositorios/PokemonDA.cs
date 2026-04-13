@@ -14,8 +14,13 @@ public class PokemonDA : IPokemonDA
         _context = context;
     }
 
-    public Task<List<Pokemon>> ListarAsync()
-        => _context.Pokemones.Include(x => x.Entrenador).ThenInclude(x => x!.Usuarios).OrderBy(x => x.Nombre).ToListAsync();
+    public Task<List<Pokemon>> ListarAsync(int? entrenadorId = null)
+        => _context.Pokemones
+            .Include(x => x.Entrenador)
+            .ThenInclude(x => x!.Usuarios)
+            .Where(x => !entrenadorId.HasValue || x.EntrenadorId == entrenadorId.Value)
+            .OrderBy(x => x.Nombre)
+            .ToListAsync();
 
     public Task<Pokemon?> ObtenerPorIdAsync(int id)
         => _context.Pokemones
